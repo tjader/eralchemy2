@@ -24,7 +24,7 @@ classifiers=[
 [tool.poetry.dependencies]
 python = "^3.7"
 sqlalchemy = ">=1.4"
-pygraphviz = "^1.7,!=1.8"
+pygraphviz = {version = "^1.7,!=1.8", optional = true}
 flask-sqlalchemy = {version = ">=2.5.1", optional = true}
 psycopg2 = {version = "^2.9.3", optional = true}
 importlib_metadata = { version = ">=4.0.0", markers = "python_version < '3.8'" }
@@ -38,6 +38,7 @@ mypy  = "^0.971"
 
 [tool.poetry.extras]
     ci = ["flask-sqlalchemy", "psycopg2"]
+    pygraphviz = ["pygraphviz"]
 
 [tool.poetry.scripts]
 eralchemy2 = "eralchemy2.main:cli"

@@ -4,8 +4,12 @@ import argparse
 import base64
 import copy
 import sys
+try:
+    from pygraphviz.agraph import AGraph
+    _GRAPHVIZ_SUPPORT = True
+except ImportError:
+    _GRAPHVIZ_SUPPORT = False
 
-from pygraphviz.agraph import AGraph
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.exc import ArgumentError
 
@@ -147,9 +151,10 @@ switch_input_class_to_method = {
 switch_output_mode_auto = {
     "er": intermediary_to_markdown,
     "mermaid": intermediary_to_mermaid,
-    "graph": intermediary_to_schema,
     "dot": intermediary_to_dot,
 }
+if _GRAPHVIZ_SUPPORT:
+    switch_output_mode_auto["graph"] = intermediary_to_schema
 
 # Routes from the file extension to the method to transform
 # the intermediary representation to the desired output.
@@ -208,7 +213,7 @@ def get_output_mode(output, mode):
     try:
         return switch_output_mode[extension]
     except KeyError:
-        return intermediary_to_schema
+        return intermediary_to_schema if _GRAPHVIZ_SUPPORT else intermediary_to_dot
 
 
 def filter_resources(
